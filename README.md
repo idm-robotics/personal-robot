@@ -1,6 +1,6 @@
 ## Personal Robot Project
 
-#Launch this in separate terminal tabs
+### Launch this in separate terminal tabs
 Launch rviz simulation that will send angles to ros topic "/joint_states":
 ```bash
 roslaunch my_arm_xacro demo.launch rviz_tutorial:=true
@@ -19,4 +19,4 @@ https://gist.githubusercontent.com/dgrachev28/d8fa42e6630358929453ae1be7a31c1a/r
 This is refactored code with implemented class for a joint:
 https://gist.githubusercontent.com/ExMiracle/65e49ace7343694eb7de1e7af042bbaa/raw/75f812391587d4065932c5b901c619cb4f203502/gist
 
-#TODO: Denis, upload our urdf file to the repository. If possible, upload whole robot folder.
+### TODO: Denis, upload our urdf and meshes files to the repository. If possible, upload whole robot folder.
