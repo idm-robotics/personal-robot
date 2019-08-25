@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: arm_20190630_3
+    relative_path: urdf/arm.urdf
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/myfirst.srdf
+  CONFIG:
+    author_name: IDM Robotics
+    author_email: idm@idm.ai
+    generated_timestamp: 1563921261

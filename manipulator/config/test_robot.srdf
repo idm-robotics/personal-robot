@@ -1,0 +1,180 @@
+<?xml version="1.0" ?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="test_robot">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="arm">
+        <joint name="base_virtual_joint" />
+        <joint name="joint2" />
+        <joint name="joint3" />
+        <joint name="joint4" />
+        <joint name="joint5" />
+        <joint name="joint6" />
+        <joint name="joint7" />
+        <joint name="joint8" />
+        <joint name="joint9" />
+        <joint name="joint10" />
+        <joint name="joint11" />
+        <joint name="joint12" />
+        <joint name="joint13" />
+        <joint name="joint14" />
+        <joint name="joint15" />
+    </group>
+    <group name="hand">
+        <link name="elbow_bracket" />
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="default" group="arm">
+        <joint name="joint10" value="0" />
+        <joint name="joint15" value="0" />
+        <joint name="joint4" value="0" />
+        <joint name="joint7" value="1.5708" />
+    </group_state>
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="hand" parent_link="elbow_servo_disc" group="hand" />
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="base_virtual_joint" type="fixed" parent_frame="world" child_link="base_link" />
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="base_bracket_right" link2="base_link" reason="Adjacent" />
+    <disable_collisions link1="base_bracket_right" link2="base_servo" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="base_servo_bracket" reason="Default" />
+    <disable_collisions link1="base_bracket_right" link2="base_servo_disc" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="elbow_bracket" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="elbow_servo" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="elbow_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="elbow_servo_disc" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_bracket_right" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="base_link" link2="base_servo" reason="Never" />
+    <disable_collisions link1="base_link" link2="base_servo_bracket" reason="Adjacent" />
+    <disable_collisions link1="base_link" link2="base_servo_disc" reason="Never" />
+    <disable_collisions link1="base_link" link2="elbow_bracket" reason="Never" />
+    <disable_collisions link1="base_link" link2="elbow_servo" reason="Never" />
+    <disable_collisions link1="base_link" link2="elbow_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_link" link2="elbow_servo_disc" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_link" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo" link2="base_servo_bracket" reason="Adjacent" />
+    <disable_collisions link1="base_servo" link2="base_servo_disc" reason="Adjacent" />
+    <disable_collisions link1="base_servo" link2="elbow_bracket" reason="Never" />
+    <disable_collisions link1="base_servo" link2="elbow_servo" reason="Never" />
+    <disable_collisions link1="base_servo" link2="elbow_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_servo" link2="elbow_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="base_servo" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="base_servo" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_servo" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="base_servo" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="base_servo" link2="shoulder_servo_bracket" reason="Default" />
+    <disable_collisions link1="base_servo" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="base_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="elbow_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="elbow_servo" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="elbow_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="elbow_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="base_servo_bracket" link2="shoulder_servo_bracket" reason="Default" />
+    <disable_collisions link1="base_servo_bracket" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="elbow_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="elbow_servo" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="elbow_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="elbow_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="base_servo_disc" link2="shoulder_servo" reason="Default" />
+    <disable_collisions link1="base_servo_disc" link2="shoulder_servo_bracket" reason="Adjacent" />
+    <disable_collisions link1="base_servo_disc" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="elbow_servo" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="elbow_servo_bracket" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="elbow_servo_disc" reason="Adjacent" />
+    <disable_collisions link1="elbow_bracket" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="elbow_bracket" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_servo" link2="elbow_servo_bracket" reason="Adjacent" />
+    <disable_collisions link1="elbow_servo" link2="elbow_servo_disc" reason="Adjacent" />
+    <disable_collisions link1="elbow_servo" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="elbow_servo" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_servo" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="elbow_servo" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_servo_bracket" link2="elbow_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_servo_bracket" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo_bracket" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="elbow_servo_bracket" link2="shoulder2_servo_bracket" reason="Adjacent" />
+    <disable_collisions link1="elbow_servo_bracket" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_servo_bracket" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo_bracket" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="elbow_servo_bracket" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo_bracket" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_servo_disc" link2="shoulder2_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo_disc" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="elbow_servo_disc" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo_disc" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="elbow_servo_disc" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo_disc" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="elbow_servo_disc" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="elbow_servo_disc" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="shoulder2_bracket" link2="shoulder2_servo" reason="Never" />
+    <disable_collisions link1="shoulder2_bracket" link2="shoulder2_servo_bracket" reason="Never" />
+    <disable_collisions link1="shoulder2_bracket" link2="shoulder2_servo_disc" reason="Adjacent" />
+    <disable_collisions link1="shoulder2_bracket" link2="shoulder_bracket" reason="Adjacent" />
+    <disable_collisions link1="shoulder2_bracket" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="shoulder2_bracket" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="shoulder2_bracket" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="shoulder2_servo" link2="shoulder2_servo_bracket" reason="Adjacent" />
+    <disable_collisions link1="shoulder2_servo" link2="shoulder2_servo_disc" reason="Adjacent" />
+    <disable_collisions link1="shoulder2_servo" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="shoulder2_servo" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="shoulder2_servo" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="shoulder2_servo" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_bracket" link2="shoulder2_servo_disc" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_bracket" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_bracket" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_bracket" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_bracket" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_disc" link2="shoulder_bracket" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_disc" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_disc" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="shoulder2_servo_disc" link2="shoulder_servo_disc" reason="Never" />
+    <disable_collisions link1="shoulder_bracket" link2="shoulder_servo" reason="Never" />
+    <disable_collisions link1="shoulder_bracket" link2="shoulder_servo_bracket" reason="Never" />
+    <disable_collisions link1="shoulder_bracket" link2="shoulder_servo_disc" reason="Adjacent" />
+    <disable_collisions link1="shoulder_servo" link2="shoulder_servo_bracket" reason="Adjacent" />
+    <disable_collisions link1="shoulder_servo" link2="shoulder_servo_disc" reason="Adjacent" />
+    <disable_collisions link1="shoulder_servo_bracket" link2="shoulder_servo_disc" reason="Never" />
+</robot>

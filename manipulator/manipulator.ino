@@ -1,3 +1,10 @@
+/*
+  Code for arduino to manage 6 DOF manipulator servos.
+  Input signal passes by ROS /joint_states
+
+  To run it you should connect servos to arduino pins specified in setup() method
+*/
+
 #if defined(ARDUINO) && ARDUINO >= 100
   #include "Arduino.h"
 #else
@@ -28,14 +35,8 @@ struct Joint {
   }
   
   spin(double radian_angle) {
-    
     double angle = radiansToDegrees(radian_angle);
     double degree_change = (angle + calib) * mult_calib;
-    
-    // nh.loginfo("arduino angles: ");
-    // char result[8]; // Buffer big enough for 7-character float
-    // dtostrf(degree_change, 6, 2, result); // Leave room for too large numbers!
-    // nh.loginfo(result);
     
     servo.write(degree_change);
   }
