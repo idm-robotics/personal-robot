@@ -1,5 +1,8 @@
 ## RGBD Vision
 
+### Quick start
+[Start guide](quick-start.md)
+
 ### Overview
 The main goal is described in this article https://arxiv.org/pdf/1903.06684.pdf
 

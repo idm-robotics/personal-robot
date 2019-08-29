@@ -1,23 +1,11 @@
 #!/usr/bin/env python
 
-# Python libs
-import sys
-import time
-import logging
+import os
 
-# numpy and scipy
-import numpy as np
-from scipy.ndimage import filters
-
-# OpenCV
 import cv2
-from cv_bridge import CvBridge, CvBridgeError
-
-# Ros libraries
-import roslib
+import numpy as np
 import rospy
-
-# Ros Messages
+from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 
 VERBOSE = True
@@ -26,11 +14,15 @@ TOPIC_IN = "/camera/rgb/image_color"
 TOPIC_OUT = "/darknet/image"
 
 
+def get_rel_project_path(path: str) -> str:
+    return os.path.join(os.path.dirname(__file__), path)
+
+
 class ObjectDetectorYOLO:
     def __init__(self,
-                 classes='./data/yolo3/yolov3.txt',
-                 weights='./data/yolo3/yolov3.weights',
-                 config='./data/yolo3/yolov3.cfg'):
+                 classes=get_rel_project_path('../data/yolo3/yolov3.txt'),
+                 weights=get_rel_project_path('../data/yolo3/yolov3.weights'),
+                 config=get_rel_project_path('../data/yolo3/yolov3.cfg')):
         self.classes = None
         with open(classes, 'r') as f:
             self.classes = [line.strip() for line in f.readlines()]
@@ -38,7 +30,8 @@ class ObjectDetectorYOLO:
         self.net = cv2.dnn.readNet(weights, config)
         self.colors = np.random.uniform(0, 255, size=(len(self.classes), 3))
 
-    def get_output_layers(self, net):
+    @staticmethod
+    def get_output_layers(net):
         layer_names = net.getLayerNames()
         output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
         return output_layers
@@ -108,8 +101,8 @@ class ObjectDetectorYOLO:
             w = box[2]
             h = box[3]
             if VERBOSE:
-                print "Class: " + self.classes[class_ids[i]] + ", coordinates: (" \
-                      + str(round(x)) + "," + str(round(y)) + "),(" + str(round(x + w)) + "," + str(round(y + h)) + ")"
+                print("Class: " + self.classes[class_ids[i]] + ", coordinates: ("
+                      + str(round(x)) + "," + str(round(y)) + "),(" + str(round(x + w)) + "," + str(round(y + h)) + ")")
 
 
 class DarknetImage:
@@ -120,7 +113,7 @@ class DarknetImage:
         self.bridge = CvBridge()
 
         # subscribed topic
-        self.subscriber = rospy.Subscriber(TOPIC_IN, Image, self.callback,  queue_size = 1)
+        self.subscriber = rospy.Subscriber(TOPIC_IN, Image, self.callback, queue_size=1)
         if VERBOSE:
             print("subscribed to " + TOPIC_IN)
 
@@ -128,13 +121,13 @@ class DarknetImage:
         if VERBOSE:
             print('received image of type: "%s"' % ros_data.encoding)
         cv_image = self.bridge.imgmsg_to_cv2(ros_data, "bgr8")
-        objectDetector = ObjectDetectorYOLO()
-        objectDetector.detect(cv_image)
+        object_detector = ObjectDetectorYOLO()
+        object_detector.detect(cv_image)
 
 
-def main(args):
+def main():
     """Initializes and cleanup ros node"""
-    ic = DarknetImage()
+    DarknetImage()
     rospy.init_node('darknet_image', anonymous=True)
     try:
         rospy.spin()
@@ -144,5 +137,4 @@ def main(args):
 
 
 if __name__ == '__main__':
-    main(sys.argv)
-
+    main()
