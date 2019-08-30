@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+PIP_DEFAULT_TIMEOUT=1000
+
 PYTHON_VERSION=3.6 # Feel free to change it to 3.7 or upper
 
 DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )"
@@ -9,6 +11,12 @@ echo "Project directory: " ${PROJECT_DIR}
 
 [[ ! -f ${DIR}/object-detection/data/yolo3/yolov3.weights ]] \
     && wget https://pjreddie.com/media/files/yolov3.weights -O ${DIR}/data/yolo3/yolov3.weights
+
+
+sudo apt-get install python3-venv python-catkin-pkg \
+                     python-catkin-tools python3-dev python3-catkin-pkg-modules \
+                     python3-numpy python3-yaml \
+                     ros-${ROS_DISTRO}-cv-bridge
 
 echo "Creating venv..."
 cd ${PROJECT_DIR}
@@ -25,9 +33,6 @@ pip install -r ${DIR}/requirements.txt
 echo "...Done"
 
 echo "Downloading and installing cv_bridge..."
-sudo apt-get install python-catkin-tools python3-dev python3-catkin-pkg-modules \
-                     python3-numpy python3-yaml \
-                     ros-${ROS_DISTRO}-cv-bridge
 
 rm -rf $HOME/tmp_catkin_ws
 mkdir $HOME/tmp_catkin_ws && cd $HOME/tmp_catkin_ws
