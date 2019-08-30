@@ -7,11 +7,15 @@ from sensor_msgs.msg import Image
 
 GRAB_INDEX = 0.15
 
+def get_sidepoints(left, top, right, bottom, grab):
+        left_point = (int(left + (right - left) * grab), (top + bottom) // 2)
+        right_point = (int(right - (right - left) * grab), (top + bottom) // 2)
+        return (left_point, right_point)
 
 def callback(data):
     # rospy.loginfo(rospy.get_name()+" %s ",data.data)
     bridge = CvBridge()
-
+    
     def draw_sidepoints(left, top, right, bottom, grab):
         left_point = (int(left + (right - left) * grab), (top + bottom) // 2)
         right_point = (int(right - (right - left) * grab), (top + bottom) // 2)
