@@ -5,12 +5,13 @@ from sensor_msgs.msg import CameraInfo
 
 
 class PointCloudConverter:
-    def __init__(self, camera_info: CameraInfo, unit_scaling: float = 0.001):
+    # TODO: investigate correct value of unit_scaling (should it be 0.001 ?)
+    def __init__(self, camera_info: CameraInfo, unit_scaling: float = 1.0):
         self.unit_scaling = unit_scaling
         self.cam_model = image_geometry.PinholeCameraModel()
         self.cam_model.fromCameraInfo(camera_info)
 
-    def convert(self, x: int, y: int, depth: int) -> Tuple[float, float, float]:
+    def convert(self, x: int, y: int, depth: float) -> Tuple[float, float, float]:
         pointcloud_x = (x - self.cam_model.cx()) * depth * self.unit_scaling / self.cam_model.fx()
         pointcloud_y = (y - self.cam_model.cy()) * depth * self.unit_scaling / self.cam_model.fy()
         pointcloud_z = depth * self.unit_scaling
