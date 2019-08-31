@@ -26,8 +26,22 @@ Launch rosbag replay after python script
 ```bash
 rosbag play --clock kinect.bag
 ```
+
 To check that rosbag works launch driver and play recording. In rviz we need to add pointcloud2 node and change fixed frame to camera_link and topic to cameta/depth_registered/points
 ```bash
 rosrun rviz rviz
 ```
+
+## Changes
+Changes in library filter_messages (row 286, zip to list[zip])
+Added `from functools import reduce` to the library.
+
+Also pointcloud_conversion receives messages from camera_info and returns
+x, y, z points in PointCloud format.
+
+Now python_subscriber_node.py both publishes and subscribes to nodes and
+it should be able to add grasp points to the cup in the rosbag file.
+
+
+
 
