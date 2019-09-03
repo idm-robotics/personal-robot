@@ -34,6 +34,7 @@ rosrun rviz rviz
 
 ## Changes
 Changes in library filter_messages (row 286, zip to list[zip])
+
 Added `from functools import reduce` to the library.
 
 Also pointcloud_conversion receives messages from camera_info and returns
