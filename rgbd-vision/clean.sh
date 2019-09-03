@@ -7,5 +7,4 @@ PROJECT_DIR=$(dirname ${DIR})
 
 rsync -av ${DIR}/object_detection/ ${CATKIN_WORKSPACE}/object_detection
 rsync -av ${DIR}/grasp_detection/ ${CATKIN_WORKSPACE}/grasp_detection
-cd ${CATKIN_WORKSPACE} && catkin build object_detection grasp_detection
-source ${CATKIN_ROOT}/devel/setup.bash # TODO: source doesn't work
+cd ${CATKIN_WORKSPACE} && catkin clean object_detection grasp_detection

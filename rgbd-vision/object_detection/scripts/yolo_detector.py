@@ -32,7 +32,7 @@ class YOLODetector(Detector):
         output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
         return output_layers
 
-    def detect(self, image):
+    def detect(self, image, header):
         # show image
         # cv2.imshow("Hello", image)
         # cv2.waitKey(2)
@@ -90,6 +90,7 @@ class YOLODetector(Detector):
         # go through the detections remaining
         # after nms and draw bounding box
         detected_object_array = DetectedObjectArray()
+        detected_object_array.header = header
         detected_object_array.data = []
 
         for i in indices:

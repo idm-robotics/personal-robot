@@ -17,7 +17,7 @@ class GraspPublisher:
     def publish_marker(pub: Publisher, left_point: Point, right_point: Point):
         # TODO: investigate, why we need this transformation for markers
         def to_marker_point(point: Point):
-            return Point(point.z, point.x, -point.y)
+            return Point(point.z, -point.x, -point.y)
 
         marker = Marker()
         marker.header.frame_id = "camera_link"

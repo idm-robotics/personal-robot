@@ -30,7 +30,7 @@ class Publisher:
             print('received image of type: "%s"' % ros_data.encoding)
         cv_image = self.bridge.imgmsg_to_cv2(ros_data, "bgr8")
         object_detector = YOLODetector()
-        msg = object_detector.detect(cv_image)
+        msg = object_detector.detect(cv_image, ros_data.header)
         self.image_pub.publish(msg)
 
 
