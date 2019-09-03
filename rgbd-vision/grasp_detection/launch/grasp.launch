@@ -2,18 +2,11 @@
 	<!-- if kinect not connected openni load driver false, else somehow decide -->
 	<!-- if rviz is open that its ok else open rviz -->
 
-	<!-- <param name="load_driver" value="false" pkg="openni_launch" unless="$(arg kinect)" /> -->
-	<!-- <param name="depth_registration" value="true" pkg="openni_launch" if="$(arg kinect)" /> -->
 
 
-
-	<!-- <node name="listener" pkg="grasp-detection" type="python_subscriber_node.py" /> -->
-
-
-    <node pkg="grasp-detection" name="python_subscriber_node" type="python_subscriber_node.py" output="screen" />
-
-
-
-	<!-- <node pkg="rosbag" type="play" name="player" output="screen" args="clock grasp_detection/kinect.bag"/> -->
+	<!-- need to pass argument to openni.launch file depth_registration true -->
+	<!-- <node pkg="openni_launch" name="openni" type="openni.launch" args="load_driver" value="false" /> -->
+    <node pkg="grasp_detection" name="python_subscriber_node" type="python_subscriber_node.py" output="screen" />
+	<node pkg="rosbag" type="play" name="player" output="screen" args="$(find grasp_detection)/kinect.bag"/>
  
 </launch>
