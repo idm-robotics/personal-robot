@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-
-CATKIN_WORKSPACE=$HOME/ws_moveit/src # Replace $HOME/ws_moveit/src to your catkin workspace directory!
+CATKIN_ROOT=$HOME/ws_moveit # Replace $HOME/ws_moveit/src to your catkin workspace directory!
+CATKIN_WORKSPACE=${CATKIN_ROOT}/src 
 
 DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )"
 PROJECT_DIR=$(dirname ${DIR})
@@ -8,3 +8,4 @@ PROJECT_DIR=$(dirname ${DIR})
 rsync -av ${DIR}/object-detection/ ${CATKIN_WORKSPACE}/object-detection
 rsync -av ${DIR}/grasp_detection/ ${CATKIN_WORKSPACE}/grasp_detection
 cd ${CATKIN_WORKSPACE} && catkin build object-detection grasp_detection
+source ${CATKIN_ROOT}/devel/setup.bash

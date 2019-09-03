@@ -50,8 +50,7 @@ def callback(rgb_image, depth_image, camera_info):
         left_top_corner = (x, y)
         right_bottom_corner = (x1, y1)
 
-        left_cup_point, right_cup_point = get_sidepoints(*left_top_corner,
-                                                         *right_bottom_corner, GRAB_INDEX)
+        left_cup_point, right_cup_point = get_sidepoints(*left_top_corner, *right_bottom_corner, GRAB_INDEX)
 
         left_depth = cv_depth_image[left_cup_point]
         right_depth = cv_depth_image[right_cup_point]
