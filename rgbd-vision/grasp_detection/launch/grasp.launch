@@ -5,8 +5,13 @@
 
 
 	<!-- need to pass argument to openni.launch file depth_registration true -->
-	<!-- <node pkg="openni_launch" name="openni" type="openni.launch" args="load_driver" value="false" /> -->
+	<include file="$(find openni_launch)/launch/openni.launch">
+	  <!-- all vars that included.launch requires must be set -->
+	  <arg name="depth_registration" value="true" />
+	</include>
+
+	<node pkg="object_detection" name="main" type="main.py" output="screen" />
     <node pkg="grasp_detection" name="python_subscriber_node" type="python_subscriber_node.py" output="screen" />
-	<node pkg="rosbag" type="play" name="player" output="screen" args="$(find grasp_detection)/kinect.bag"/>
+	<!-- <node pkg="rosbag" type="play" name="player" output="screen" args="$(find grasp_detection)/kinect.bag"/> -->
  
 </launch>
