@@ -6,5 +6,5 @@ DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )"
 PROJECT_DIR=$(dirname ${DIR})
 
 rsync -av ${DIR}/object-detection/ ${CATKIN_WORKSPACE}/object-detection
-rsync -av ${DIR}/grasp-detection/ ${CATKIN_WORKSPACE}/grasp-detection
-cd ${CATKIN_WORKSPACE} && catkin build object-detection grasp-detection
+rsync -av ${DIR}/grasp_detection/ ${CATKIN_WORKSPACE}/grasp_detection
+cd ${CATKIN_WORKSPACE} && catkin build object-detection grasp_detection

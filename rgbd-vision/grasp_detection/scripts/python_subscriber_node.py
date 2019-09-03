@@ -6,7 +6,8 @@ import rospy
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image, CameraInfo
 from pointcloud_conversion import PointCloudConverter
-from publish_marker_node import publish_marker
+from publisher import GraspPublisher
+from grasp_detection.msg import Grasp
 from visualization_msgs.msg import Marker
 
 GRAB_INDEX = 0.25
@@ -15,7 +16,8 @@ y = 265
 x1 = 350
 y1 = 360
 
-pub = rospy.Publisher('grasp_marker', Marker, queue_size=100)
+marker_pub = rospy.Publisher('grasp_marker', Marker, queue_size=100)
+grasp_pub = rospy.Publisher('grasp', Grasp, queue_size=100)
 
 
 def get_sidepoints(left, top, right, bottom, grab):
@@ -45,7 +47,6 @@ def callback(rgb_image, depth_image, camera_info):
 
         cv_depth_image = bridge.imgmsg_to_cv2(depth_image)
 
-
         left_top_corner = (x, y)
         right_bottom_corner = (x1, y1)
 
@@ -62,7 +63,8 @@ def callback(rgb_image, depth_image, camera_info):
         lp = pc_converter.convert(*left_cup_point, left_depth)
         rp = pc_converter.convert(*right_cup_point, right_depth)
 
-        publish_marker(pub, lp, rp)
+        GraspPublisher.publish_marker(marker_pub, lp, rp)
+        GraspPublisher.publish_grasp(grasp_pub, lp, rp)
 
         # draw_box(left_top_corner, right_bottom_corner)
         # draw_sidepoints(*left_top_corner, *right_bottom_corner, GRAB_INDEX)

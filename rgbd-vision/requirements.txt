@@ -1,5 +1,6 @@
 catkin-pkg==0.4.13
 docutils==0.15.2
+empy==3.3.4
 numpy==1.17.1
 opencv-python==4.1.0.25
 pyparsing==2.4.2
