@@ -27,7 +27,7 @@ TODO: add screenshots
 1. Run `build.sh`. It will create symlinks in your catkin workspace and build project
 1. Connect kinect
 1. Run `roslaunch openni_launch openni.launch depth_registration:=true`
-1. Open new terminal and finally run your node `rosrun object-detection main.py`
+1. Open new terminal and finally run your node `rosrun object_detection main.py`
 
 
 **If you have errors with opencv, you may need to remove cv2.so from `/opt/ros/melodic/lib/python2.7/dist-packages/`**

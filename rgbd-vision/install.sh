@@ -9,7 +9,7 @@ PROJECT_DIR=$(dirname ${DIR})
 
 echo "Project directory: " ${PROJECT_DIR}
 
-[[ ! -f ${DIR}/object-detection/data/yolo3/yolov3.weights ]] \
+[[ ! -f ${DIR}/object_detection/data/yolo3/yolov3.weights ]] \
     && wget https://pjreddie.com/media/files/yolov3.weights -O ${DIR}/data/yolo3/yolov3.weights
 
 
