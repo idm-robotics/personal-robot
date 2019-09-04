@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 
 import os
+
 import cv2
 import numpy as np
+import rospy
 from object_detection.msg import DetectedObject
 from object_detection.msg import DetectedObjectArray
-from detector import Detector
 
-VERBOSE = True
+from detector import Detector
 
 
 def get_rel_project_path(path: str) -> str:
@@ -56,7 +57,9 @@ class YOLODetector(Detector):
 
         # run inference through the network
         # and gather predictions from output layers
+        start_time = rospy.Time.now()
         outs = self.net.forward(self.get_output_layers(self.net))
+        rospy.loginfo("net.forward:%6.3f" % (rospy.Time.now() - start_time).to_sec())
 
         # initialization
         class_ids = []
@@ -101,9 +104,7 @@ class YOLODetector(Detector):
             w = round(box[2])
             h = round(box[3])
             category = self.classes[class_ids[i]]
-            if VERBOSE:
-                print("Class: " + category + ", coordinates: ("
-                      + str(x) + "," + str(y) + "),(" + str(x + w) + "," + str(y + h) + ")")
+            rospy.loginfo(f"Class: {category}, coordinates: ({x},{y}),({x + w},{y + h})")
             detected_object = DetectedObject()
             detected_object.category = category
             detected_object.top = y + h

@@ -84,7 +84,7 @@ def listener():
     object_detection_sub = message_filters.Subscriber("object_detection/boxes", DetectedObjectArray)
 
     ts = message_filters.ApproximateTimeSynchronizer([rgb_sub, depth_sub, camera_info_sub, object_detection_sub],
-                                                     10, 10)
+                                                     100, 20)
     ts.registerCallback(callback)
 
     # declares that your node subscribes to the chatter topic which is of type   s   std_msgs.msgs.String
