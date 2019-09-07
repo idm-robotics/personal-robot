@@ -3,7 +3,11 @@
 ### Launch this in separate terminal tabs
 Launch rviz simulation that will send angles to ros topic "/joint_states":
 ```bash
-roslaunch my_arm_xacro demo.launch rviz_tutorial:=true
+roslaunch manipulator demo.launch
+```
+After launching demo.launch run grasp_evaluator.py from manipulator node
+```bash
+rosrun manipulator grasp_evaluator.py
 ```
 Important - change ttyUSB0 to your arduino port. Setup arduino connection:
 ```bash
