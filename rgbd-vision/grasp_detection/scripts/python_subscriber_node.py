@@ -3,6 +3,7 @@
 import message_filters
 import cv2
 import rospy
+import numpy as np
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image, CameraInfo
 from pointcloud_conversion import PointCloudConverter
@@ -12,6 +13,7 @@ from object_detection.msg import DetectedObjectArray
 from visualization_msgs.msg import Marker
 
 GRAB_INDEX = 0.25
+DEPTH_BOX_INDENT = 3
 
 marker_pub = rospy.Publisher('grasp_marker', Marker, queue_size=100)
 grasp_pub = rospy.Publisher('grasp', Grasp, queue_size=100)
@@ -19,15 +21,29 @@ bridge = CvBridge()
 
 
 def get_sidepoints(left, top, right, bottom, grab):
-    left_point = (int(left + (right - left) * grab), (top + bottom) // 2)
-    right_point = (int(right - (right - left) * grab), (top + bottom) // 2)
+    indent = (right - left) * grab
+    y = (top + bottom) // 2
+    left_point = (int(left + indent), y)
+    right_point = (int(right - indent), y)
     return left_point, right_point
 
 
+def get_depth(cv_depth_image, point):
+    depth = cv_depth_image[point[::-1]]
+    if np.isnan(depth):
+        x_left_indent = point[0] - DEPTH_BOX_INDENT
+        x_right_indent = point[0] + DEPTH_BOX_INDENT
+        y_bottom_indent = point[1] - DEPTH_BOX_INDENT
+        y_top_indent = point[1] + DEPTH_BOX_INDENT
+        box = cv_depth_image[y_bottom_indent:y_top_indent, x_left_indent:x_right_indent]
+        box_reshaped = np.reshape(np.array(box), -1)
+        box_reshaped = box_reshaped[~np.isnan(box_reshaped)]
+        return np.median(box_reshaped)
+    return depth
+
+
 def callback(rgb_image, depth_image, camera_info, object_detection_boxes: DetectedObjectArray):
-    def draw_sidepoints(left, top, right, bottom, grab):
-        left_point = (int(left + (right - left) * grab), (top + bottom) // 2)
-        right_point = (int(right - (right - left) * grab), (top + bottom) // 2)
+    def draw_sidepoints(left_point, right_point):
         cv2.circle(image, left_point, 2, (0, 255, 0), 2)
         cv2.circle(image, right_point, 2, (0, 255, 0), 2)
 
@@ -53,11 +69,21 @@ def callback(rgb_image, depth_image, camera_info, object_detection_boxes: Detect
 
         left_cup_point, right_cup_point = get_sidepoints(*left_top_corner, *right_bottom_corner, GRAB_INDEX)
 
-        left_depth = cv_depth_image[left_cup_point[::-1]]
-        right_depth = cv_depth_image[right_cup_point[::-1]]
+        left_depth = get_depth(cv_depth_image, left_cup_point)
+        right_depth = get_depth(cv_depth_image, right_cup_point)
+        if np.isnan(left_depth):
+            rospy.logwarn(f'left depth is nan')
+            if not np.isnan(right_depth):
+                left_depth = right_depth
+        if np.isnan(right_depth):
+            rospy.logwarn(f'right depth is nan')
+            if not np.isnan(left_depth):
+                right_depth = left_depth
 
-        rospy.loginfo(f'left_point: {left_depth}')
-        rospy.loginfo(f'right_point: {right_depth}')
+        rospy.loginfo(f'left_cup_point: {left_cup_point}')
+        rospy.loginfo(f'right_cup_point: {right_cup_point}')
+        rospy.loginfo(f'left_depth: {left_depth}')
+        rospy.loginfo(f'right_depth: {right_depth}')
 
         pc_converter = PointCloudConverter(camera_info)
         lp = pc_converter.convert(*left_cup_point, left_depth)
@@ -67,7 +93,7 @@ def callback(rgb_image, depth_image, camera_info, object_detection_boxes: Detect
         GraspPublisher.publish_grasp(grasp_pub, lp, rp)
 
         draw_box(left_top_corner, right_bottom_corner)
-        draw_sidepoints(*left_top_corner, *right_bottom_corner, GRAB_INDEX)
+        draw_sidepoints(left_cup_point, right_cup_point)
 
     except CvBridgeError as e:
         print(e)
