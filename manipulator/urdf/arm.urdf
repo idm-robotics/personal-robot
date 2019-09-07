@@ -12,17 +12,23 @@
   <material name="red">
     <color rgba="0.8 0 0 1"/>
   </material>
+<!-- 
+  <joint name="camera_joint" type="fixed">
+    <parent link="camera_link"/>
+    <child link="base_link"/>
+    <origin xyz="0.5 0.5 0"/>
+  </joint>
 
-  <link name="base_link">
+ -->  <link name="base_link">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/base_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/base_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="blue"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/base_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/base_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -36,14 +42,14 @@
   <link name="base_bracket_right">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/base_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/base_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="blue"/>
      <origin rpy="0 0 3.1415" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/base_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/base_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -57,14 +63,14 @@
   <link name="base_servo_bracket">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="green"/>
      <origin rpy="0 0 1.5707" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -79,14 +85,14 @@
   <link name="base_servo">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
      <origin rpy="1.5707 0 -1.5707" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -103,14 +109,14 @@
   <link name="base_servo_disc">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="blue"/>
      <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -127,14 +133,14 @@
   <link name="shoulder_servo_bracket">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="green"/>
      <origin rpy="0 0 1.5707" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -149,14 +155,14 @@
   <link name="shoulder_servo">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
      <origin rpy="1.5707 0 -1.5707" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -173,14 +179,14 @@
   <link name="shoulder_servo_disc">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="blue"/>
      <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -194,13 +200,13 @@
   <link name="shoulder_bracket">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -217,13 +223,13 @@
   <link name="shoulder2_bracket">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -239,14 +245,14 @@
   <link name="shoulder2_servo_disc">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="blue"/>
      <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -260,14 +266,14 @@
   <link name="shoulder2_servo">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
      <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -281,14 +287,14 @@
   <link name="shoulder2_servo_bracket">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="green"/>
      <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -305,14 +311,14 @@
   <link name="elbow_servo_bracket">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="green"/>
      <origin rpy="0 0 1.5707" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -326,14 +332,14 @@
   <link name="elbow_servo">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
      <origin rpy="1.5707 0 -1.5707" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -350,14 +356,14 @@
   <link name="elbow_servo_disc">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="blue"/>
      <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -371,13 +377,13 @@
   <link name="elbow_bracket">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -399,14 +405,14 @@
   <link name="shoulder2_servo_bracket">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="green"/>
      <origin rpy="0 0 1.5707" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -421,14 +427,14 @@
   <link name="shoulder2_servo">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
      <origin rpy="1.5707 0 -1.5707" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -445,14 +451,14 @@
   <link name="shoulder2_servo_disc">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="blue"/>
      <origin rpy="0 0 0" xyz="0 0 0"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>
@@ -467,13 +473,13 @@
   <link name="shoulder2_bracket_1">
     <visual>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
      <material name="red"/>
     </visual>
     <collision>
      <geometry>
-      <mesh filename="package://arm_20190630_3/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
+      <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="0.01 0.01 0.01"/>
      </geometry>
     </collision>
   </link>

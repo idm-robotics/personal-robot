@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 import rospy
 import moveit_commander
@@ -12,29 +12,31 @@ group_name = "hand"
 group = moveit_commander.MoveGroupCommander(group_name)
 
 
-def setup_joint_config():
-    joint_goal = group.get_current_joint_values()
-    joint_goal[0] = 0
-    joint_goal[1] = -pi / 4
-    joint_goal[2] = 0
-    joint_goal[3] = -pi / 2
-    joint_goal[4] = 0
-    joint_goal[5] = pi / 3
-    joint_goal[6] = 0
+# def setup_joint_config():
+#     joint_goal = group.get_current_joint_values()
+#     joint_goal[0] = 0
+#     joint_goal[1] = -pi / 4
+#     joint_goal[2] = 0
+#     joint_goal[3] = -pi / 2
+#     joint_goal[4] = 0
+#     joint_goal[5] = pi / 3
 
-    group.go(joint_goal, wait=True)
-    group.stop()
-
-
-setup_joint_config()
+#     group.go(joint_goal, wait=True)
+#     group.stop()
 
 
-def callback(grasp: Grasp):
+# setup_joint_config()
+
+
+def callback(grasp):
     display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                    moveit_msgs.msg.DisplayTrajectory,
                                                    queue_size=20)
 
     def move_group(x, y, z, w=1):
+        """ Moves hand to the provided position. You take some initial orientation,
+         and then rotate it around vector (x,y,z) by acos(w).
+        """
         pose_goal = geometry_msgs.msg.Pose()
         pose_goal.orientation.w = w
         pose_goal.position.x = x
@@ -54,6 +56,12 @@ def callback(grasp: Grasp):
         # TODO: PointCloud has to have complete integration in the world
         # so collision matrix will detect collisions with objects
 
+    left_point = grasp.left_point
+    right_point = grasp.right_point
+    x = (left_point.x + right_point.x) // 2
+    y = (left_point.y + right_point.y) // 2
+    z = (left_point.z + right_point.z) // 2
+    move_group(x, y, z)
 
 def listener():
     rospy.init_node('grasp_evaluator', anonymous=True)
