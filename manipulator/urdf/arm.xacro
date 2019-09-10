@@ -1,0 +1,387 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="test_robot">
+    <xacro:property name="scale" value="0.001" />
+    <xacro:property name="xyz_scale" value="0.1" />
+
+    <material name="blue">
+        <color rgba="0 0 0.8 1"/>
+    </material>
+
+    <material name="green">
+        <color rgba="0 1 0 1"/>
+    </material>
+
+    <material name="red">
+        <color rgba="0.8 0 0 1"/>
+    </material>
+
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/base_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="blue"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/base_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint1" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_bracket_right"/>
+        <origin xyz="0 0 0"/>
+    </joint>
+
+    <link name="base_bracket_right">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/base_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="blue"/>
+            <origin rpy="0 0 3.1415" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/base_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint2" type="fixed">
+        <parent link="base_link"/>
+        <child link="base_servo_bracket"/>
+        <origin rpy="0 0 1.5707" xyz="${xyz_scale * 0.15} ${xyz_scale * 0.21} ${xyz_scale * 0}"/>
+    </joint>
+
+    <link name="base_servo_bracket">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="green"/>
+            <origin rpy="0 0 1.5707" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <joint name="joint3" type="fixed">
+        <parent link="base_servo_bracket"/>
+        <child link="base_servo"/>
+        <origin xyz="${xyz_scale * -0.15} 0 ${xyz_scale * 0.24}"/>
+    </joint>
+
+    <link name="base_servo">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="red"/>
+            <origin rpy="1.5707 0 -1.5707" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <joint name="joint4" type="revolute">
+        <parent link="base_servo"/>
+        <child link="base_servo_disc"/>
+        <origin rpy="-1.5707 0 0" xyz="${xyz_scale * 0} ${xyz_scale * -0.105} ${xyz_scale * 0.27}"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
+    </joint>
+
+    <link name="base_servo_disc">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="blue"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- Shoulder 1 block -->
+
+    <joint name="joint5" type="fixed">
+        <parent link="base_servo_disc"/>
+        <child link="shoulder_servo_bracket"/>
+        <origin rpy="3.1415 0 1.5707" xyz="${xyz_scale * -0.1} ${xyz_scale * 0} ${xyz_scale * 0.25}"/>
+    </joint>
+
+    <link name="shoulder_servo_bracket">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="green"/>
+            <origin rpy="0 0 1.5707" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <joint name="joint6" type="fixed">
+        <parent link="shoulder_servo_bracket"/>
+        <child link="shoulder_servo"/>
+        <origin xyz="${xyz_scale * -0.15} ${xyz_scale * 0} ${xyz_scale * 0.24}"/>
+    </joint>
+
+    <link name="shoulder_servo">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="red"/>
+            <origin rpy="1.5707 0 -1.5707" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <joint name="joint7" type="revolute">
+        <parent link="shoulder_servo"/>
+        <child link="shoulder_servo_disc"/>
+        <origin rpy="-1.5707 0 0" xyz="${xyz_scale * 0} ${xyz_scale * -0.105} ${xyz_scale * 0.27}"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
+    </joint>
+
+    <link name="shoulder_servo_disc">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="blue"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint8" type="fixed">
+        <parent link="shoulder_servo_disc"/>
+        <child link="shoulder_bracket"/>
+        <origin rpy="1.5707 0 -1.5707" xyz="${xyz_scale * 0} ${xyz_scale * 0.26} ${xyz_scale * -0.5}"/>
+    </joint>
+
+    <link name="shoulder_bracket">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- Shoulder 2 block -->
+
+    <joint name="joint9" type="fixed">
+        <parent link="shoulder_bracket"/>
+        <child link="shoulder2_bracket"/>
+        <origin rpy="3.1415 0 0" xyz="0 0 0"/>
+    </joint>
+
+    <link name="shoulder2_bracket">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint10" type="revolute">
+        <parent link="shoulder2_bracket"/>
+        <child link="shoulder2_servo_disc"/>
+        <origin rpy="0 0 1.5707" xyz="${xyz_scale * 0.26} ${xyz_scale * 0.5} ${xyz_scale * 0}"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-1.5707" upper="1.5707" velocity="0.5"/>
+    </joint>
+
+    <link name="shoulder2_servo_disc">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="blue"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint11" type="fixed">
+        <parent link="shoulder2_servo_disc"/>
+        <child link="shoulder2_servo"/>
+        <origin rpy="3.1415 3.1415 0" xyz="${xyz_scale * 0.105} ${xyz_scale * 0.27} ${xyz_scale * 0}"/>
+    </joint>
+
+    <link name="shoulder2_servo">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="red"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint12" type="fixed">
+        <parent link="shoulder2_servo"/>
+        <child link="shoulder2_servo_bracket"/>
+        <origin rpy="-1.5707 0 0" xyz="${xyz_scale * 0} ${xyz_scale * -0.24} ${xyz_scale * 0.15}"/>
+    </joint>
+
+    <link name="shoulder2_servo_bracket">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="green"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- Elbow block -->
+
+    <joint name="joint13" type="fixed">
+        <parent link="shoulder2_servo_bracket"/>
+        <child link="elbow_servo_bracket"/>
+        <origin rpy="0 0 -1.5707" xyz="${xyz_scale * -1.0} ${xyz_scale * 0} ${xyz_scale * 0}"/>
+    </joint>
+
+    <link name="elbow_servo_bracket">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="green"/>
+            <origin rpy="0 0 1.5707" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint14" type="fixed">
+        <parent link="elbow_servo_bracket"/>
+        <child link="elbow_servo"/>
+        <origin xyz="${xyz_scale * -0.15} ${xyz_scale * 0} ${xyz_scale * 0.24}"/>
+    </joint>
+
+    <link name="elbow_servo">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="red"/>
+            <origin rpy="1.5707 0 -1.5707" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <joint name="joint15" type="revolute">
+        <parent link="elbow_servo"/>
+        <child link="elbow_servo_disc"/>
+        <origin rpy="-1.5707 0 0" xyz="${xyz_scale * 0} ${xyz_scale * -0.105} ${xyz_scale * 0.27}"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
+    </joint>
+
+    <link name="elbow_servo_disc">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="blue"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint16" type="fixed">
+        <parent link="elbow_servo_disc"/>
+        <child link="elbow_bracket"/>
+        <origin rpy="1.5707 0 -1.5707" xyz="${xyz_scale * 0} ${xyz_scale * 0.26} ${xyz_scale * -0.5}"/>
+    </joint>
+
+    <link name="elbow_bracket">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+</robot>

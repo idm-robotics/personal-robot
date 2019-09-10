@@ -32,6 +32,7 @@ Here is a list of useful links for development in ROS
 1. [Move Group Python Interface](http://docs.ros.org/melodic/api/moveit_tutorials/html/doc/move_group_python_interface/move_group_python_interface_tutorial.html)
 1. [MoveIt Setup Assistant](http://docs.ros.org/melodic/api/moveit_tutorials/html/doc/setup_assistant/setup_assistant_tutorial.html)
 1. [URDF and SRDF](http://docs.ros.org/melodic/api/moveit_tutorials/html/doc/urdf_srdf/urdf_srdf_tutorial.html)
+1. [URDF Tutorials](http://wiki.ros.org/urdf/Tutorials)
 
 ### message_filters
 1. [message_filters package](http://wiki.ros.org/message_filters)
