@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="test_robot">
-    <xacro:property name="scale" value="0.001" />
+    <xacro:property name="scale" value="0.002" />
     <xacro:property name="xyz_scale" value="0.1" />
 
     <material name="blue">
