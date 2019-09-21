@@ -5,6 +5,8 @@ controller_list:
       - joint7
       - joint10
       - joint15
+      - joint18
   - name: fake_hand_controller
     joints:
-      []
+      - joint20
+      - joint21
