@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ""
+    relative_path: /home/denis/PycharmProjects/personal-robot/manipulator/urdf/box_arm.urdf
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/six_dof_arm.srdf
+  CONFIG:
+    author_name: IDM Robotics
+    author_email: idm@idm.ai
+    generated_timestamp: 1569368613
