@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="test_robot">
-    <xacro:property name="scale" value="0.001" />
-    <xacro:property name="xyz_scale" value="0.1" />
+    <xacro:property name="scale" value="0.002"/>
+    <xacro:property name="xyz_scale" value="0.2"/>
+    <xacro:property name="gripper_scale" value="1.5"/>
 
     <material name="blue">
         <color rgba="0 0 0.8 1"/>
@@ -340,7 +341,6 @@
         </collision>
     </link>
 
-
     <joint name="joint15" type="revolute">
         <parent link="elbow_servo"/>
         <child link="elbow_servo_disc"/>
@@ -364,13 +364,16 @@
         </collision>
     </link>
 
+
+    <!-- Wrist block -->
+
     <joint name="joint16" type="fixed">
         <parent link="elbow_servo_disc"/>
-        <child link="elbow_bracket"/>
+        <child link="wrist_servo_bracket"/>
         <origin rpy="1.5707 0 -1.5707" xyz="${xyz_scale * 0} ${xyz_scale * 0.26} ${xyz_scale * -0.5}"/>
     </joint>
 
-    <link name="elbow_bracket">
+    <link name="wrist_servo_bracket">
         <visual>
             <geometry>
                 <mesh filename="package://manipulator/meshes/u_bracket.stl" scale="${scale} ${scale} ${scale}"/>
@@ -383,5 +386,115 @@
             </geometry>
         </collision>
     </link>
+
+    <joint name="joint17" type="fixed">
+        <parent link="wrist_servo_bracket"/>
+        <child link="wrist_servo"/>
+        <origin rpy="1.5707 1.5707 0" xyz="${xyz_scale * 0} ${xyz_scale * 0.1} ${xyz_scale * 0}"/>
+    </joint>
+
+    <link name="wrist_servo">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="red"/>
+            <origin rpy="1.5707 0 -1.5707" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint18" type="revolute">
+        <parent link="wrist_servo"/>
+        <child link="wrist_servo_disc"/>
+        <origin rpy="-1.5707 0 0" xyz="${xyz_scale * 0} ${xyz_scale * -0.105} ${xyz_scale * 0.27}"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="0.0" upper="3.1415" velocity="0.5"/>
+    </joint>
+
+    <link name="wrist_servo_disc">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+            <material name="blue"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/servo_disc.stl" scale="${scale} ${scale} ${scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <!-- Gripper (claw) block -->
+
+    <link name="claw_base">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/clawbase.stl" scale="${gripper_scale} ${gripper_scale} ${gripper_scale}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/clawbase.stl" scale="${gripper_scale} ${gripper_scale} ${gripper_scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="claw_l">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/clawl.stl" scale="${gripper_scale} ${gripper_scale} ${gripper_scale}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/clawl.stl" scale="${gripper_scale} ${gripper_scale} ${gripper_scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <link name="claw_r">
+        <visual>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/clawr.stl" scale="${gripper_scale} ${gripper_scale} ${gripper_scale}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <geometry>
+                <mesh filename="package://manipulator/meshes/clawr.stl" scale="${gripper_scale} ${gripper_scale} ${gripper_scale}"/>
+            </geometry>
+        </collision>
+    </link>
+
+
+    <joint name="joint19" type="fixed">
+        <axis xyz="-1 0 0"/>
+        <origin xyz="${gripper_scale * 0.027} ${gripper_scale * -0.065} ${gripper_scale * 0}" rpy="1.5707 0 0"/>
+        <parent link="wrist_servo_disc"/>
+        <child link="claw_base"/>
+    </joint>
+
+    <joint name="joint20" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-0.15" upper="0.30" velocity="1.0"/>
+        <origin xyz="${gripper_scale * -0.027} 0 0" rpy="0 0 0"/>
+        <parent link="claw_base"/>
+        <child link="claw_l"/>
+    </joint>
+
+    <joint name="joint21" type="revolute">
+        <axis xyz="0 -1 0"/>
+        <limit effort="1000.0" lower="-0.15" upper="0.30" velocity="1.0"/>
+        <origin xyz="${gripper_scale * -0.027} 0 0" rpy="0 0 0"/>
+        <parent link="claw_base"/>
+        <child link="claw_r"/>
+    </joint>
 
 </robot>
