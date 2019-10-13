@@ -43,7 +43,7 @@ class IKSolverTester:
         self.move_group.clear_pose_targets()
 
 
-if __name__ == '__main__':
+def main():
     tester = IKSolverTester()
     for i in range(5):
         tester.print_current_pose()
@@ -52,3 +52,7 @@ if __name__ == '__main__':
         z = float(input("z = "))
         print("Got values:", x, y, z)
         tester.move_xyz(x, y, z)
+
+
+if __name__ == '__main__':
+    main()

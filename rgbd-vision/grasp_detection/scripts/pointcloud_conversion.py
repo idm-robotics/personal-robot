@@ -1,5 +1,3 @@
-from typing import Tuple
-
 import image_geometry
 from geometry_msgs.msg import Point
 from sensor_msgs.msg import CameraInfo

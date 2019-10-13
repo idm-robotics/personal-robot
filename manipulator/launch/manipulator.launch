@@ -1,0 +1,12 @@
+<launch>
+    <arg name="debug" default="false"/>
+
+	<include file="$(find manipulator_moveit_config)/launch/demo.launch">
+        <arg name="debug" value="$(arg debug)"/>
+    </include>
+
+    <node pkg="manipulator" name="manipulator" type="grasp_evaluator.py" output="screen"/>
+    <node pkg="grasp_detection" name="grasp_detection" type="main.py" output="screen"/>
+    <node pkg="object_detection" name="object_detection" type="main.py" output="screen"/>
+
+</launch>
