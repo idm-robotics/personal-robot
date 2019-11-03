@@ -22,3 +22,7 @@ We use Xbox 360 Kinect as RGBD camera
 ROS https://www.ros.org/ is used in our desktop ubuntu 16.04 or 18.04
 
 To connect Kinect to PC use openni_launch http://wiki.ros.org/openni_launch
+
+### Mask R-CNN model
+Download link: https://github.com/matterport/Mask_RCNN/releases/download/v2.0/mask_rcnn_coco.h5
+Put this to rgbd-vision/object_detection/data/mask_rcnn
