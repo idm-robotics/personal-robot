@@ -10,8 +10,14 @@ import mrcnn.model as modellib
 from detector import Detector
 
 # Uncomment lines below if you want to use CPU instead of GPU
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"] = ""
+# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+# os.environ["CDA_VISIBLE_DEVICES"] = ""
+
+
+# for cudnn (https://github.com/tensorflow/tensorflow/issues/24828)
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+tf.keras.backend.set_session(tf.Session(config=config))
 
 
 def get_rel_project_path(path: str) -> str:
@@ -64,12 +70,13 @@ class MaskRCNNDetector(Detector):
             # score: result['scores'][i]
             detected_object = DetectedObject()
             detected_object.category = self.class_names[class_id]
+            score = result['scores'][i]
             detected_object.top = result['rois'][i][0]
             detected_object.left = result['rois'][i][1]
             detected_object.bottom = result['rois'][i][2]
             detected_object.right = result['rois'][i][3]
             detected_object_array.data.append(detected_object)
-            rospy.loginfo(f"Class: {detected_object.category}, coordinates: [{detected_object.top}, "
+            rospy.loginfo(f"Class: {detected_object.category}, score: {score}, coordinates: [{detected_object.top}, "
                           f"{detected_object.left}, {detected_object.bottom}, {detected_object.right}]")
 
         return detected_object_array
