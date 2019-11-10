@@ -1,7 +1,7 @@
 moveit_setup_assistant_config:
   URDF:
-    package: ""
-    relative_path: /home/denis/PycharmProjects/personal-robot/manipulator/urdf/box_arm.urdf
+    package: "manipulator"
+    relative_path: urdf/box_arm.urdf
     xacro_args: "--inorder "
   SRDF:
     relative_path: config/six_dof_arm.srdf
