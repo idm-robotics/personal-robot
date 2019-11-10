@@ -1,94 +1,90 @@
 #!/usr/bin/env python2
-
+import numpy as np
 import rospy
-import moveit_commander
-from grasp_detection.msg import Grasp
-from moveit_msgs.msg import moveit_msgs, geometry_msgs
+from grasp_detection.msg import Grasp as GraspDetection
 import tf
 import ik_solver_test
-from geometry_msgs.msg import PointStamped
-
-ik_solver = ik_solver_test.IKSolverTester()
-tf_listener = tf.TransformListener()
-
-# ('Goal target coordinates ', 0.027420001853080023, 0.7070000469684601, 0.010100000670978)
+from geometry_msgs.msg import PointStamped, PoseStamped
+from moveit_msgs.msg import Grasp, GripperTranslation, PlaceLocation
+from tf.transformations import quaternion_from_euler
 
 
-def callback(grasp):
-    try:
-        (trans, rot) = tf_listener.lookupTransform('/base_link', '/camera_link', rospy.Time(0))
-    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-        pass
+class GraspEvaluator:
+    def __init__(self):
+        self.ik_solver = ik_solver_test.IKSolverTester()
+        self.tf_listener = tf.TransformListener()
 
-    print('Transform: ', trans)
-    print('Rotation: ', rot)
+    @staticmethod
+    def cartesian_to_spherical(x, y, z):
+        xy = x ** 2 + y ** 2
+        spherical_x = np.sqrt(xy + z ** 2)
+        spherical_y = np.arctan2(np.sqrt(xy), z)  # for elevation angle defined from Z-axis down
+        # ptsnew[:,4] = np.arctan2(xyz[:,2], np.sqrt(xy)) # for elevation angle defined from XY-plane up
+        spherical_z = np.arctan2(y, x)
+        return spherical_x, spherical_y, spherical_z
 
-    left_point = grasp.left_point
-    right_point = grasp.right_point
-    x = (left_point.x + right_point.x) / 2
-    y = (left_point.y + right_point.y) / 2
-    z = (left_point.z + right_point.z) / 2
+    def callback(self, grasp):
+        left_point = grasp.left_point
+        right_point = grasp.right_point
+        x = (left_point.x + right_point.x) / 2
+        y = (left_point.y + right_point.y) / 2
+        z = (left_point.z + right_point.z) / 2
 
-    point = PointStamped()
-    point.point.x = x
-    point.point.y = y
-    point.point.z = z
-    point.header.frame_id = 'camera_rgb_optical_frame'
-    print(grasp.header)
+        # point = PointStamped()
+        # point.point.x = x
+        # point.point.y = y
+        # point.point.z = z
+        point = PoseStamped()
+        point.pose.position.x = x
+        point.pose.position.y = y
+        point.pose.position.z = z
 
-    transformed_point = tf_listener.transformPoint('base_link', point)
-    print("===========Point===============")
-    print(point)
-    print("===========TRANSFORMER===============")
-    print(transformed_point)
-    ik_solver.move_xyz(transformed_point.point.x, transformed_point.point.y, transformed_point.point.z)
+        roll, pitch, yaw = self.cartesian_to_spherical(x, y, z)
+        print("roll, pitch, yaw: ", roll, pitch, yaw)
+        q_x, q_y, q_z, q_w = quaternion_from_euler(roll, pitch, yaw)
+        print(q_x, q_y, q_z, q_w)
 
-    # x: -0.21489746767595763
-    # y: 0.3179554308020345
-    # z: -0.008753333914847445
+        point.pose.orientation.x = q_x
+        point.pose.orientation.y = q_y
+        point.pose.orientation.z = q_z
+        point.pose.orientation.w = q_w
 
-    print('Goal target coordinates ', x, y, z)
-    ik_solver.print_current_pose()
+        point.header.frame_id = 'camera_rgb_optical_frame'
+        print(grasp.header)
 
-    # display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
-    #                                                moveit_msgs.msg.DisplayTrajectory,
-    #                                                queue_size=20)
+        # transformed_point = self.tf_listener.transformPoint('base_link', point)
+        transformed_point = self.tf_listener.transformPose('base_link', point)
+        print("===========Point===============")
+        print(point)
+        print("===========TRANSFORMER===============")
+        print(transformed_point)
+        # self.ik_solver.move_xyz(transformed_point.point.x, transformed_point.point.y, transformed_point.point.z)
+        self.ik_solver.move_pose(transformed_point)
+
+        print('Goal target coordinates ', x, y, z)
+        self.ik_solver.print_current_pose()
+
+    # def create_grasp(self, x, y, z):
+    #     grasp = Grasp()
+    #     grasp.pre_grasp_approach.direction.vector.z = 1
+    #     grasp.pre_grasp_approach.direction.header.frame_id = 'endeff'
+    #     grasp.pre_grasp_approach.min_distance = 0.04
+    #     grasp.pre_grasp_approach.desired_distance = 0.10
     #
-    # def move_group(x, y, z, w=1):
-    #     """ Moves hand to the provided position. You take some initial orientation,
-    #      and then rotate it around vector (x,y,z) by acos(w).
-    #     """
-    #     pose_goal = geometry_msgs.msg.Pose()
-    #     pose_goal.orientation.w = w
-    #     pose_goal.position.x = x
-    #     pose_goal.position.y = y
-    #     pose_goal.position.z = z
-    #     group.set_pose_target(pose_goal)
-    #
-    #     plan = group.go(wait=True)
-    #     group.stop()
-    #     group.clear_pose_targets()
-    #
-    #     display_trajectory = moveit_msgs.msg.DisplayTrajectory()
-    #     display_trajectory.trajectory_start = robot.get_current_state()
-    #     display_trajectory.trajectory.append(plan)
-    #     display_trajectory_publisher.publish(display_trajectory)
-    #
-    #     # TODO: PointCloud has to have complete integration in the world
-    #     # so collision matrix will detect collisions with objects
-    #
-    # left_point = grasp.left_point
-    # right_point = grasp.right_point
-    # x = (left_point.x + right_point.x) // 2
-    # y = (left_point.y + right_point.y) // 2
-    # z = (left_point.z + right_point.z) // 2
-    # move_group(x, y, z)
+    #     point = PoseStamped()
+    #     point.pose.position.x = x
+    #     point.pose.position.y = y
+    #     point.pose.position.z = z
+    #     point.
+    #     point.header.frame_id = 'camera_rgb_optical_frame'
+    #     grasp.grasp_pose.pose =
 
-def listener():
-    # rospy.init_node('grasp_evaluator', anonymous=True)
-    subscriber = rospy.Subscriber('grasp', Grasp, callback, queue_size=1)
-    rospy.spin()
+
+    def listener(self):
+        # rospy.init_node('grasp_evaluator', anonymous=True)
+        rospy.Subscriber('grasp', GraspDetection, self.callback, queue_size=1)
+        rospy.spin()
 
 
 if __name__ == '__main__':
-    listener()
+    GraspEvaluator().listener()
