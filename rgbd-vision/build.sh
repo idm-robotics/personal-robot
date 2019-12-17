@@ -18,7 +18,22 @@ CATKIN_WORKSPACE=${CATKIN_ROOT}/src
 DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )"
 PROJECT_DIR=$(dirname ${DIR})
 
-rsync -av ${DIR}/object_detection/ ${CATKIN_WORKSPACE}/object_detection
-rsync -av ${DIR}/grasp_detection/ ${CATKIN_WORKSPACE}/grasp_detection
-cd ${CATKIN_WORKSPACE} && catkin build object_detection grasp_detection
-source ${CATKIN_ROOT}/devel/setup.bash # TODO: source doesn't work
+# rsync -av ${DIR}/object_detection/ ${CATKIN_WORKSPACE}/object_detection
+# rsync -av ${DIR}/grasp_detection/ ${CATKIN_WORKSPACE}/grasp_detection
+if [ -d ${CATKIN_WORKSPACE}/object_detection ]; then
+	rm -rf ${CATKIN_WORKSPACE}/object_detection
+fi
+
+if [ -d ${CATKIN_WORKSPACE}/grasp_detection ]; then
+	rm -rf ${CATKIN_WORKSPACE}/grasp_detection
+fi
+
+if ! [ -L ${CATKIN_WORKSPACE}/object_detection ]; then
+	ln -s ${DIR}/object_detection ${CATKIN_WORKSPACE}/object_detection
+fi
+
+if ! [ -L ${CATKIN_WORKSPACE}/grasp_detection ]; then
+	ln -s ${DIR}/grasp_detection ${CATKIN_WORKSPACE}/grasp_detection
+fi
+# cd ${CATKIN_WORKSPACE} && catkin build object_detection grasp_detection
+# source ${CATKIN_ROOT}/devel/setup.bash # TODO: source doesn't work

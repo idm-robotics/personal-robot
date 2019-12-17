@@ -20,6 +20,14 @@ PROJECT_DIR=$(dirname ${DIR})
 
 xacro --inorder ${DIR}/urdf/arm.xacro > ${DIR}/urdf/arm.urdf
 
-rsync -av ${DIR}/ ${CATKIN_WORKSPACE}/manipulator
-cd ${CATKIN_WORKSPACE} && catkin build manipulator
-source ${CATKIN_ROOT}/devel/setup.bash # TODO: source doesn't work
+# rsync -av ${DIR}/ ${CATKIN_WORKSPACE}/manipulator
+if [ -d ${CATKIN_WORKSPACE}/manipulator ]; then
+	rm -rf ${CATKIN_WORKSPACE}/manipulator
+fi
+
+if ! [ -L ${CATKIN_WORKSPACE}/manipulator ]; then
+	ln -s ${DIR}/ ${CATKIN_WORKSPACE}/manipulator
+fi
+
+# cd ${CATKIN_WORKSPACE} && catkin build manipulator
+# source ${CATKIN_ROOT}/devel/setup.bash # TODO: source doesn't work

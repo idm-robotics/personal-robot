@@ -18,6 +18,14 @@ CATKIN_WORKSPACE=${CATKIN_ROOT}/src
 DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )"
 PROJECT_DIR=$(dirname ${DIR})
 
-rsync -av ${DIR}/ ${CATKIN_WORKSPACE}/manipulator_moveit_config
-cd ${CATKIN_WORKSPACE} && catkin build manipulator_moveit_config
-source ${CATKIN_ROOT}/devel/setup.bash # TODO: source doesn't work
+# rsync -av ${DIR}/ ${CATKIN_WORKSPACE}/manipulator_moveit_config
+if [ -d ${CATKIN_WORKSPACE}/manipulator_moveit_config ]; then
+	rm -rf ${CATKIN_WORKSPACE}/manipulator_moveit_config
+fi
+
+if ! [ -L ${CATKIN_WORKSPACE}/manipulator_moveit_config ]; then
+	ln -s ${DIR}/ ${CATKIN_WORKSPACE}/manipulator_moveit_config
+fi
+
+# cd ${CATKIN_WORKSPACE} && catkin build manipulator_moveit_config
+# source ${CATKIN_ROOT}/devel/setup.bash # TODO: source doesn't work
