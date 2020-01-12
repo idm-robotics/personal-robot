@@ -1,6 +1,6 @@
 moveit_setup_assistant_config:
   URDF:
-    package: "manipulator"
+    package: manipulator
     relative_path: urdf/box_arm.urdf
     xacro_args: "--inorder "
   SRDF:
@@ -8,4 +8,4 @@ moveit_setup_assistant_config:
   CONFIG:
     author_name: IDM Robotics
     author_email: idm@idm.ai
-    generated_timestamp: 1569368613
+    generated_timestamp: 1578827408

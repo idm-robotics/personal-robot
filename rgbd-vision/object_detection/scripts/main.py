@@ -6,7 +6,7 @@ from cv_bridge import CvBridge
 from object_detection.msg import DetectedObjectArray
 from sensor_msgs.msg import Image
 
-from mask_rcnn_detector import MaskRCNNDetector
+# from mask_rcnn_detector import MaskRCNNDetector
 from yolo_detector import YOLODetector
 
 TOPIC_IN = "/camera/rgb/image_rect_color"
@@ -19,7 +19,8 @@ class Publisher:
         # topic where we publish
         self.image_pub = rospy.Publisher(TOPIC_OUT, DetectedObjectArray, queue_size=1)
         self.bridge = CvBridge()
-        self.object_detector = MaskRCNNDetector()
+        self.object_detector = YOLODetector()
+        # self.object_detector = MaskRCNNDetector() # change if gppu exists
 
         # buff_size=2**24 because of: https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/
         self.subscriber = rospy.Subscriber(TOPIC_IN, Image, self.callback, queue_size=1, buff_size=2 ** 24)
