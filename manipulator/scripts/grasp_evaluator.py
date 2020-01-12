@@ -86,6 +86,16 @@ class GraspEvaluator:
         self.ik_solver = IKSolver()
         self.tf_listener = tf.TransformListener()
 
+    def normalize(self, v):
+        norm = np.linalg.norm(v)
+        if norm == 0:
+           return v
+        return v / norm
+
+    def calculate_indent_position(self, position, normal, coefficient): # np.array
+        normalized_normal = self.normalize(normal)
+        return position + coefficient * normalized_normal
+
     def callback(self, grasp):
         left_point = np.array([grasp.left_point.x, grasp.left_point.y, grasp.left_point.z])
         right_point = np.array([grasp.right_point.x, grasp.right_point.y, grasp.right_point.z])
@@ -95,7 +105,13 @@ class GraspEvaluator:
         cup_normal_vector = np.cross(left_point - center_point, right_point - center_point)
         cup_right_vector = right_point - left_point
 
-        point = self.ik_solver.point_to_pose(target_position, cup_right_vector, cup_normal_vector)
+        final_position = self.calculate_indent_position(target_position, cup_normal_vector, 0.1)
+
+        print("Target position: ", target_position)
+        print("Final position: ", final_position)
+
+
+        point = self.ik_solver.point_to_pose(final_position, cup_right_vector, cup_normal_vector)
 
         transformed_point = self.tf_listener.transformPose('base_link', point)
         print("===========Point===============")
