@@ -25,7 +25,7 @@
 
   <!-- If needed, broadcast static tf for robot root -->
 
-  <!-- node pkg="tf" type="static_transform_publisher" name="kinect_broadcaster" args="0.32 -0.15 0 0 0 3.14 1 base_link camera_link 100" /> -->
+  <node pkg="tf" type="static_transform_publisher" name="kinect_broadcaster" args="0.32 -0.15 0 0 0 3.14 1 base_link camera_link 100" />
 
   <!-- We do not have a robot connected, so publish fake joint states -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">

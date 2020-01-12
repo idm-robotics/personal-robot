@@ -24,7 +24,7 @@
 
     <joint name="joint1" type="revolute">
         <axis xyz="0 0 1"/>
-        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
         <origin rpy="0 0 0" xyz="0 0 0.1"/>
         <parent link="base_link"/>
         <child link="link1"/>
@@ -42,7 +42,7 @@
 
     <joint name="joint2" type="revolute">
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
         <origin rpy="0 0 0" xyz="0 0 0.05"/>
         <parent link="link1"/>
         <child link="link2"/>
@@ -60,7 +60,7 @@
 
     <joint name="joint3" type="revolute">
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
         <origin rpy="0 0 0" xyz="0 0 0.2"/>
         <parent link="link2"/>
         <child link="link3"/>
@@ -78,7 +78,7 @@
 
     <joint name="joint4" type="revolute">
         <axis xyz="0 0 1"/>
-        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
         <origin rpy="0 0 0" xyz="0 0 0.1"/>
         <parent link="link3"/>
         <child link="link4"/>
@@ -96,7 +96,7 @@
 
     <joint name="joint5" type="revolute">
         <axis xyz="0 1 0"/>
-        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
         <origin rpy="0 0 0" xyz="0 0 0.05"/>
         <parent link="link4"/>
         <child link="link5"/>
@@ -114,7 +114,7 @@
 
     <joint name="joint6" type="revolute">
         <axis xyz="0 0 1"/>
-        <limit effort="1000.0" lower="-1.57" upper="1.57" velocity="0.5"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
         <origin rpy="0 0 0" xyz="0 0 0.1"/>
         <parent link="link5"/>
         <child link="link6"/>

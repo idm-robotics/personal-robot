@@ -7,30 +7,30 @@ from visualization_msgs.msg import Marker
 
 class GraspPublisher:
     @staticmethod
-    def publish_grasp(pub: Publisher, left_point: Point, right_point: Point):
+    def publish_grasp(pub: Publisher, left_point: Point, right_point: Point, center_point: Point):
         grasp = Grasp()
         grasp.left_point = left_point
         grasp.right_point = right_point
+        grasp.center_point = center_point
         pub.publish(grasp)
 
     @staticmethod
-    def publish_marker(pub: Publisher, left_point: Point, right_point: Point):
-        # TODO: investigate, why we need this transformation for markers
+    def publish_marker(pub: Publisher, left_point: Point, right_point: Point, center_point: Point):
         def to_marker_point(point: Point):
-            return Point(point.z, -point.x, -point.y)
+            return Point(point.x, point.y, point.z)
 
         marker = Marker()
-        marker.header.frame_id = "camera_link"
+        marker.header.frame_id = "camera_rgb_optical_frame"
 
         marker.type = marker.POINTS
         marker.action = marker.ADD
 
-        marker.points = [to_marker_point(left_point), to_marker_point(right_point)]
+        marker.points = [to_marker_point(left_point), to_marker_point(right_point), to_marker_point(center_point)]
         t = rospy.Duration()
         marker.lifetime = t
-        marker.scale.x = 0.1
-        marker.scale.y = 0.1
-        marker.scale.z = 0.1
+        marker.scale.x = 0.05
+        marker.scale.y = 0.05
+        marker.scale.z = 0.05
         marker.color.a = 1.0
         marker.color.r = 1.0
 
