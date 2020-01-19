@@ -5,8 +5,12 @@ import rospy
 import tf
 from geometry_msgs.msg import PoseStamped
 from grasp_detection.msg import Grasp as GraspDetection
+from moveit_msgs.msg import Grasp as GraspObject
 from moveit_msgs.msg import moveit_msgs
+from trajectory_msgs.msg import JointTrajectory
+from gripper.msgs.msg import GripperTranslation
 from tf.transformations import quaternion_from_matrix
+from factories import ObjectFactory, GraspFactory
 
 
 class IKSolver:
@@ -34,20 +38,10 @@ class IKSolver:
         group_names = self.robot.get_group_names()
         print("============ Available Planning Groups: %s" % group_names)
 
-    def get_current_quaternion(self):
-        q = self.move_group.get_current_pose().pose.orientation
-        return np.array([q.x, q.y, q.z, q.w])
-
     def print_current_pose(self):
         print('====== Current Pose ======')
         print(self.move_group.get_current_pose())
         print(self.move_group.get_current_rpy())
-
-    def move_xyz(self, x=0.0, y=0.0, z=0.0):
-        self.move_group.set_position_target([x, y, z])
-        self.move_group.go(wait=True)
-        self.move_group.stop()
-        self.move_group.clear_pose_targets()
 
     def move_pose(self, pose):
         self.move_group.set_pose_target(pose)
@@ -57,10 +51,10 @@ class IKSolver:
 
     @staticmethod
     def point_to_pose(position, direction_vector, upper_vector):
-        point = PoseStamped()
-        point.pose.position.x = position[0]
-        point.pose.position.y = position[1]
-        point.pose.position.z = position[2]
+        pose = PoseStamped()
+        pose.pose.position.x = position[0]
+        pose.pose.position.y = position[1]
+        pose.pose.position.z = position[2]
 
         rotation_matrix = np.eye(4)
         rotation_matrix[:3, 0] = direction_vector
@@ -72,63 +66,109 @@ class IKSolver:
         rotation_quaternion = quaternion_from_matrix(rotation_matrix)
         print("rotation_quaternion:", rotation_quaternion)
 
-        point.pose.orientation.x = rotation_quaternion[0]
-        point.pose.orientation.y = rotation_quaternion[1]
-        point.pose.orientation.z = rotation_quaternion[2]
-        point.pose.orientation.w = rotation_quaternion[3]
+        pose.pose.orientation.x = rotation_quaternion[0]
+        pose.pose.orientation.y = rotation_quaternion[1]
+        pose.pose.orientation.z = rotation_quaternion[2]
+        pose.pose.orientation.w = rotation_quaternion[3]
 
-        point.header.frame_id = 'camera_rgb_optical_frame'
-        return point
-
-
-class GraspEvaluator:
-    def __init__(self):
-        self.ik_solver = IKSolver()
-        self.tf_listener = tf.TransformListener()
+        pose.header.frame_id = 'camera_rgb_optical_frame'
+        return pose
 
     def normalize(self, v):
         norm = np.linalg.norm(v)
         if norm == 0:
-           return v
+            return v
         return v / norm
 
-    def calculate_indent_position(self, position, normal, coefficient): # np.array
+    def calculate_indent_position(self, position, normal, coefficient):  # np.array
         normalized_normal = self.normalize(normal)
         return position + coefficient * normalized_normal
 
-    def callback(self, grasp):
-        left_point = np.array([grasp.left_point.x, grasp.left_point.y, grasp.left_point.z])
-        right_point = np.array([grasp.right_point.x, grasp.right_point.y, grasp.right_point.z])
-        center_point = np.array([grasp.center_point.x, grasp.center_point.y, grasp.center_point.z])
-        target_position = (left_point + right_point) / 2
+
+class BaseMovement:
+    @staticmethod
+    def __get_grasp_pose(grasp_coordinates):
+        left_point = np.array([grasp_coordinates.left_point.x,
+                               grasp_coordinates.left_point.y,
+                               grasp_coordinates.left_point.z])
+        right_point = np.array([grasp_coordinates.right_point.x,
+                                grasp_coordinates.right_point.y,
+                                grasp_coordinates.right_point.z])
+        center_point = np.array([grasp_coordinates.center_point.x,
+                                 grasp_coordinates.center_point.y,
+                                 grasp_coordinates.center_point.z])
+        object_position = (left_point + right_point) / 2
 
         cup_normal_vector = np.cross(left_point - center_point, right_point - center_point)
         cup_right_vector = right_point - left_point
 
-        final_position = self.calculate_indent_position(target_position, cup_normal_vector, 0.1)
+        gripper_position = IKSolver.calculate_indent_position(object_position, cup_normal_vector, 0.1)
 
-        print("Target position: ", target_position)
-        print("Final position: ", final_position)
+        print("Target position: ", object_position)
+        print("Final position: ", gripper_position)
 
+        pose = IKSolver.point_to_pose(gripper_position, cup_right_vector, cup_normal_vector)
 
-        point = self.ik_solver.point_to_pose(final_position, cup_right_vector, cup_normal_vector)
+        return pose
 
-        transformed_point = self.tf_listener.transformPose('base_link', point)
-        print("===========Point===============")
-        print(point)
+    @staticmethod
+    def __get_transform_pose(pose):
+        transformed_pose = tf.TransformListener.transformPose('base_link', pose)
+        print("===========Pose===============")
+        print(pose)
         print("===========TRANSFORMER===============")
-        print(transformed_point)
-        # self.ik_solver.move_xyz(transformed_point.point.x, transformed_point.point.y, transformed_point.point.z)
-        self.ik_solver.move_pose(transformed_point)
+        print(transformed_pose)
 
-        print('Goal target coordinates ', point)
-        self.ik_solver.print_current_pose()
+        return transformed_pose
+
+    # def __move_to_grasping_pose(self, grasp_coordinates):
+    #     pose = self.__get_grasp_pose(grasp_coordinates)
+    #     transformed_pose = __get_transform_pose(pose)
+    #     IKSolver.move_pose(transformed_pose)
+    #
+    #     print('Goal target pose coordinates ', pose)
+    #     IKSolver.print_current_pose()
+    #
+    # def pick(self, grasp_coordinates):
+    #     self.__move_to_grasping_pose(grasp_coordinates)
+
+    # def __move_to_release_pose(self):
+    #     # normalize, calculate_indent
+    #     self.__move_to_pose()
+    #
+    # def __release(self):
+    #     self.__holding = False
+    #     pass
+    #
+    # def place(self):
+    #     if self.__holding:
+    #         self.__move_to_release_pose(point)
+    #         self.__release()
+
+
+
+class GraspEvaluator:
+    def __init__(self, user_task):
+        self.ik_solver = IKSolver()
+        self.tf_listener = tf.TransformListener()
+
+    def do_request(self):
+        # will I spawn a box every spin?
+        object = ObjectFactory.build()
+        grasp = GraspFactory.build(grasp_coordinates)
+        self.ik_solver.move_group.pick('object', grasp)
+        # attaching object is missing from the scheme
+        # TODO: add gripper behaviour
+        # TODO: add gripper and end_eddector
+
+    def callback(self, grasp):
+        self.do_request()
 
     def listener(self):
         # rospy.init_node('grasp_evaluator', anonymous=True)
-        rospy.Subscriber('grasp', GraspDetection, self.callback, queue_size=1)
+        rospy.Subscriber('grasp_coordinates', GraspDetection, self.callback, queue_size=1)
         rospy.spin()
 
 
 if __name__ == '__main__':
-    GraspEvaluator().listener()
+    GraspEvaluator('pick').listener()

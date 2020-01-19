@@ -8,11 +8,11 @@ from visualization_msgs.msg import Marker
 class GraspPublisher:
     @staticmethod
     def publish_grasp(pub: Publisher, left_point: Point, right_point: Point, center_point: Point):
-        grasp = Grasp()
-        grasp.left_point = left_point
-        grasp.right_point = right_point
-        grasp.center_point = center_point
-        pub.publish(grasp)
+        grasp_coordinates = Grasp()
+        grasp_coordinates.left_point = left_point
+        grasp_coordinates.right_point = right_point
+        grasp_coordinates.center_point = center_point
+        pub.publish(grasp_coordinates)
 
     @staticmethod
     def publish_marker(pub: Publisher, left_point: Point, right_point: Point, center_point: Point):
