@@ -5,8 +5,12 @@ import rospy
 import tf
 from geometry_msgs.msg import PoseStamped
 from grasp_detection.msg import Grasp as GraspDetection
+from moveit_msgs.msg import Grasp as GraspObject
 from moveit_msgs.msg import moveit_msgs
+from trajectory_msgs.msg import JointTrajectory
+from gripper.msgs.msg import GripperTranslation
 from tf.transformations import quaternion_from_matrix
+from factories import ObjectFactory, GraspFactory
 
 
 class IKSolver:
@@ -82,10 +86,8 @@ class IKSolver:
 
 
 class BaseMovement:
-    def __move_to_pose(self):
-        pass
-
-    def __move_to_grasping_pose(self, grasp_coordinates):
+    @staticmethod
+    def __get_grasp_pose(grasp_coordinates):
         left_point = np.array([grasp_coordinates.left_point.x,
                                grasp_coordinates.left_point.y,
                                grasp_coordinates.left_point.z])
@@ -107,23 +109,28 @@ class BaseMovement:
 
         pose = IKSolver.point_to_pose(gripper_position, cup_right_vector, cup_normal_vector)
 
+        return pose
+
+    @staticmethod
+    def __get_transform_pose(pose):
         transformed_pose = tf.TransformListener.transformPose('base_link', pose)
         print("===========Pose===============")
         print(pose)
         print("===========TRANSFORMER===============")
         print(transformed_pose)
-        IKSolver.move_pose(transformed_point)
 
-        print('Goal target pose coordinates ', pose)
-        IKSolver.print_current_pose()
+        return transformed_pose
 
-    def __grasp(self):
-        # stepper motor action
-        self.__holding = True
-
-    def pick(self, grasp_coordinates):
-        self.__move_to_grasping_pose(grasp_coordinates)
-        self.__grasp()
+    # def __move_to_grasping_pose(self, grasp_coordinates):
+    #     pose = self.__get_grasp_pose(grasp_coordinates)
+    #     transformed_pose = __get_transform_pose(pose)
+    #     IKSolver.move_pose(transformed_pose)
+    #
+    #     print('Goal target pose coordinates ', pose)
+    #     IKSolver.print_current_pose()
+    #
+    # def pick(self, grasp_coordinates):
+    #     self.__move_to_grasping_pose(grasp_coordinates)
 
     # def __move_to_release_pose(self):
     #     # normalize, calculate_indent
@@ -139,22 +146,20 @@ class BaseMovement:
     #         self.__release()
 
 
-class Manipulator:
-    def __init__(self):
+
+class GraspEvaluator:
+    def __init__(self, user_task):
         self.ik_solver = IKSolver()
         self.tf_listener = tf.TransformListener()
-        self.__in_progress = False
-        self.__holding = False
-        # user_task should be passed as a message from another node
-        # TODO: no initialization here in the future, just a crutch for now
-        self.user_task = 'pick'
 
     def do_request(self):
-        if self.__in_progress:
-            return 'Not ready yet...'
-        # again a crutch
-        if self.user_task == 'pick':
-            BaseMovement.pick(point)
+        # will I spawn a box every spin?
+        object = ObjectFactory.build()
+        grasp = GraspFactory.build(grasp_coordinates)
+        self.ik_solver.move_group.pick('object', grasp)
+        # attaching object is missing from the scheme
+        # TODO: add gripper behaviour
+        # TODO: add gripper and end_eddector
 
     def callback(self, grasp):
         self.do_request()
@@ -166,4 +171,4 @@ class Manipulator:
 
 
 if __name__ == '__main__':
-    GraspEvaluator().listener()
+    GraspEvaluator('pick').listener()
