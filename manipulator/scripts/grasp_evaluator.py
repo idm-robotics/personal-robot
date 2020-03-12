@@ -53,15 +53,17 @@ class IKSolver:
 
     def move_xyz(self, x=0.0, y=0.0, z=0.0):
         self.arm_move_group.set_position_target([x, y, z])
-        self.arm_move_group.go(wait=True)
+        success = self.arm_move_group.go(wait=True)
         self.arm_move_group.stop()
         self.arm_move_group.clear_pose_targets()
+        return success
 
     def move_pose(self, pose):
         self.arm_move_group.set_pose_target(pose)
-        self.arm_move_group.go(wait=True)
+        success = self.arm_move_group.go(wait=True)
         self.arm_move_group.stop()
         self.arm_move_group.clear_pose_targets()
+        return success
 
     @staticmethod
     def point_to_pose(position, direction_vector, upper_vector):
@@ -108,15 +110,17 @@ class GraspEvaluator:
         joint_goal = self.ik_solver.hand_move_group.get_current_joint_values()
         joint_goal[0] = -0.3
         joint_goal[1] = 0.3
-        self.ik_solver.hand_move_group.go(joint_goal, wait=True)
+        success = self.ik_solver.hand_move_group.go(joint_goal, wait=True)
         self.ik_solver.hand_move_group.stop()
+        return success
 
     def release(self):
         joint_goal = self.ik_solver.hand_move_group.get_current_joint_values()
         joint_goal[0] = 0
         joint_goal[1] = 0
-        self.ik_solver.hand_move_group.go(joint_goal, wait=True)
+        success = self.ik_solver.hand_move_group.go(joint_goal, wait=True)
         self.ik_solver.hand_move_group.stop()
+        return success
 
     def callback(self, grasp):
         left_point = np.array([grasp.left_point.x, grasp.left_point.y, grasp.left_point.z])
@@ -127,7 +131,7 @@ class GraspEvaluator:
         cup_normal_vector = np.cross(left_point - center_point, right_point - center_point)
         cup_right_vector = right_point - left_point
 
-        final_position = self.calculate_indent_position(target_position, cup_normal_vector, 0.1)
+        final_position = self.calculate_indent_position(target_position, cup_normal_vector, 0.2)
 
         print("Target position: ", target_position)
         print("Final position: ", final_position)
@@ -140,10 +144,10 @@ class GraspEvaluator:
         print("===========TRANSFORMER===============")
         print(transformed_point)
         # self.ik_solver.move_xyz(transformed_point.point.x, transformed_point.point.y, transformed_point.point.z)
-        self.ik_solver.move_pose(transformed_point)
+        success_move = self.ik_solver.move_pose(transformed_point)
 
-        # gripper_grasp
-        self.grasp()
+        if success_move:
+            self.grasp()
 
         print('Goal target coordinates ', point)
         self.ik_solver.print_current_pose()
