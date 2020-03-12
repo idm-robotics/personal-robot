@@ -115,7 +115,7 @@
     <joint name="joint6" type="revolute">
         <axis xyz="0 0 1"/>
         <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
-        <origin rpy="0 0 0" xyz="0 0 0.1"/>
+        <origin rpy="0 0 0" xyz="0 0 0.075"/>
         <parent link="link5"/>
         <child link="link6"/>
     </joint>
@@ -123,11 +123,89 @@
     <link name="link6">
         <visual>
             <geometry>
-                <box size="0.1 0.07 0.05"/>
+                <box size="0.05 0.05 0.05"/>
             </geometry>
             <material name="blue"/>
-            <origin rpy="0 0 0" xyz="0 0 0.025"/>
+            <origin rpy="0 0 0" xyz="0 0 0.05"/>
         </visual>
     </link>
+
+   <!-- /gripper claw -->
+   <joint name="joint7" type="revolute">
+       <axis xyz="0 1 0"/>
+       <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
+       <origin rpy="0 0 0" xyz="0 0 0.05"/>
+       <parent link="link6"/>
+       <child link="claw_base"/>
+   </joint>
+
+
+    <link name="claw_base">
+        <visual>
+            <geometry>
+                <box size="0.1 0.07 0.05"/>
+            </geometry>
+            <material name="green"/>
+            <origin rpy="0 0 0" xyz="0 0 0.05"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.1 0.07 0.05"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint8" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
+        <origin rpy="0 0 0" xyz="0 0 0.05"/>
+        <parent link="claw_base"/>
+        <child link="claw_l"/>
+    </joint>
+
+    <link name="claw_l">
+        <visual>
+            <geometry>
+                <box size="0.02 0.02 0.1"/>
+            </geometry>
+            <material name="white"/>
+            <!-- set angle and position -->
+            <origin rpy="0 0.3 0" xyz="0.025 0 0.05"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.02 0.02 0.1"/>
+            </geometry>
+        </collision>
+    </link>
+
+    <joint name="joint9" type="revolute">
+        <axis xyz="0 1 0"/>
+        <limit effort="1000.0" lower="-3.14" upper="3.14" velocity="0.5"/>
+        <origin rpy="0 0 0" xyz="0 0 0.05"/>
+        <parent link="claw_base"/>
+        <child link="claw_r"/>
+    </joint>
+
+    <link name="claw_r">
+        <visual>
+            <geometry>
+                <box size="0.02 0.02 0.1"/>
+            </geometry>
+            <material name="white"/>
+            <!-- set angle and position -->
+            <origin rpy="0 -0.3 0" xyz="-0.025 0 0.05"/>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="0.02 0.02 0.1"/>
+            </geometry>
+        </collision>
+    </link>
+
+<!--    gripper scale is 1.5 -->
+<!--    x = 0.027 y = -0.065 z = 0 -->
+
+
 
 </robot>

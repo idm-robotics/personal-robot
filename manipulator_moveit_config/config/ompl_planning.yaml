@@ -147,7 +147,7 @@ arm:
     - SPARS
     - SPARStwo
 hand:
-  default_planner_config: ""
+  default_planner_config: None
   planner_configs:
     - SBL
     - EST
@@ -172,3 +172,5 @@ hand:
     - LazyPRMstar
     - SPARS
     - SPARStwo
+  projection_evaluator: joints(joint7,joint8)
+  longest_valid_segment_fraction: 0.005
