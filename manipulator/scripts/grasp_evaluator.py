@@ -122,16 +122,14 @@ class GraspEvaluator:
         self.ik_solver.hand_move_group.stop()
         return success
 
-    def callback(self, grasp):
-        left_point = np.array([grasp.left_point.x, grasp.left_point.y, grasp.left_point.z])
-        right_point = np.array([grasp.right_point.x, grasp.right_point.y, grasp.right_point.z])
-        center_point = np.array([grasp.center_point.x, grasp.center_point.y, grasp.center_point.z])
-        target_position = (left_point + right_point) / 2
+    def grasp_pipeline(self, target_position, cup_normal_vector, cup_right_vector):
+        success, _ = self.move_hand(target_position, cup_normal_vector, cup_right_vector, 0.3)
+        if success:
+            second_success, point = self.move_hand(target_position, cup_normal_vector, cup_right_vector, 0.2)
+            return second_success, point
 
-        cup_normal_vector = np.cross(left_point - center_point, right_point - center_point)
-        cup_right_vector = right_point - left_point
-
-        final_position = self.calculate_indent_position(target_position, cup_normal_vector, 0.2)
+    def move_hand(self, target_position, cup_normal_vector, cup_right_vector, coefficient):
+        final_position = self.calculate_indent_position(target_position, cup_normal_vector, coefficient)
 
         print("Target position: ", target_position)
         print("Final position: ", final_position)
@@ -145,6 +143,18 @@ class GraspEvaluator:
         print(transformed_point)
         # self.ik_solver.move_xyz(transformed_point.point.x, transformed_point.point.y, transformed_point.point.z)
         success_move = self.ik_solver.move_pose(transformed_point)
+        return success_move, point
+
+    def callback(self, grasp):
+        left_point = np.array([grasp.left_point.x, grasp.left_point.y, grasp.left_point.z])
+        right_point = np.array([grasp.right_point.x, grasp.right_point.y, grasp.right_point.z])
+        center_point = np.array([grasp.center_point.x, grasp.center_point.y, grasp.center_point.z])
+        target_position = (left_point + right_point) / 2
+
+        cup_normal_vector = np.cross(left_point - center_point, right_point - center_point)
+        cup_right_vector = right_point - left_point
+
+        success_move, point = self.grasp_pipeline(target_position, cup_normal_vector, cup_right_vector)
 
         if success_move:
             self.grasp()
