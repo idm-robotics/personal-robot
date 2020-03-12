@@ -9,6 +9,5 @@ controller_list:
       - joint6
   - name: fake_hand_controller
     joints:
-      - joint7
       - joint8
       - joint9

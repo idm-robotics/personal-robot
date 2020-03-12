@@ -6,6 +6,6 @@ moveit_setup_assistant_config:
   SRDF:
     relative_path: config/six_dof_arm.srdf
   CONFIG:
-    author_name: idm_robotics
-    author_email: idm_robotics@idm.ai
-    generated_timestamp: 1583681734
+    author_name: idm-robotics
+    author_email: idm-robotics@idm.ai
+    generated_timestamp: 1584040461

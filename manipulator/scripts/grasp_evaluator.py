@@ -17,43 +17,51 @@ class IKSolver:
         self.robot = moveit_commander.RobotCommander()
         self.scene = moveit_commander.PlanningSceneInterface()
 
-        self.group_name = "arm"
-        self.move_group = moveit_commander.MoveGroupCommander(self.group_name)
+        self.arm_group_name = "arm"
+        self.hand_group_name = "hand"
+        self.arm_move_group = moveit_commander.MoveGroupCommander(self.arm_group_name)
+        self.hand_move_group = moveit_commander.MoveGroupCommander(self.hand_group_name)
         self.display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path',
                                                             moveit_msgs.msg.DisplayTrajectory,
                                                             queue_size=20)
         self.print_base_info()
 
     def print_base_info(self):
-        planning_frame = self.move_group.get_planning_frame()
+        planning_frame = self.arm_move_group.get_planning_frame()
         print("============ Planning frame: %s" % planning_frame)
 
-        eef_link = self.move_group.get_end_effector_link()
+        arm_joints = self.arm_move_group.get_current_joint_values()
+        print("============ Arm joints: %s" % arm_joints)
+
+        hand_joints = self.hand_move_group.get_current_joint_values()
+        print("============ Planning Hand joints: %s" % hand_joints)
+
+        eef_link = self.arm_move_group.get_end_effector_link()
         print("============ End effector link: %s" % eef_link)
 
         group_names = self.robot.get_group_names()
         print("============ Available Planning Groups: %s" % group_names)
 
     def get_current_quaternion(self):
-        q = self.move_group.get_current_pose().pose.orientation
+        q = self.arm_move_group.get_current_pose().pose.orientation
         return np.array([q.x, q.y, q.z, q.w])
 
     def print_current_pose(self):
         print('====== Current Pose ======')
-        print(self.move_group.get_current_pose())
-        print(self.move_group.get_current_rpy())
+        print(self.arm_move_group.get_current_pose())
+        print(self.arm_move_group.get_current_rpy())
 
     def move_xyz(self, x=0.0, y=0.0, z=0.0):
-        self.move_group.set_position_target([x, y, z])
-        self.move_group.go(wait=True)
-        self.move_group.stop()
-        self.move_group.clear_pose_targets()
+        self.arm_move_group.set_position_target([x, y, z])
+        self.arm_move_group.go(wait=True)
+        self.arm_move_group.stop()
+        self.arm_move_group.clear_pose_targets()
 
     def move_pose(self, pose):
-        self.move_group.set_pose_target(pose)
-        self.move_group.go(wait=True)
-        self.move_group.stop()
-        self.move_group.clear_pose_targets()
+        self.arm_move_group.set_pose_target(pose)
+        self.arm_move_group.go(wait=True)
+        self.arm_move_group.stop()
+        self.arm_move_group.clear_pose_targets()
 
     @staticmethod
     def point_to_pose(position, direction_vector, upper_vector):
@@ -89,12 +97,26 @@ class GraspEvaluator:
     def normalize(self, v):
         norm = np.linalg.norm(v)
         if norm == 0:
-           return v
+            return v
         return v / norm
 
-    def calculate_indent_position(self, position, normal, coefficient): # np.array
+    def calculate_indent_position(self, position, normal, coefficient):  # np.array
         normalized_normal = self.normalize(normal)
         return position + coefficient * normalized_normal
+
+    def grasp(self):
+        joint_goal = self.ik_solver.hand_move_group.get_current_joint_values()
+        joint_goal[0] = -0.3
+        joint_goal[1] = 0.3
+        self.ik_solver.hand_move_group.go(joint_goal, wait=True)
+        self.ik_solver.hand_move_group.stop()
+
+    def release(self):
+        joint_goal = self.ik_solver.hand_move_group.get_current_joint_values()
+        joint_goal[0] = 0
+        joint_goal[1] = 0
+        self.ik_solver.hand_move_group.go(joint_goal, wait=True)
+        self.ik_solver.hand_move_group.stop()
 
     def callback(self, grasp):
         left_point = np.array([grasp.left_point.x, grasp.left_point.y, grasp.left_point.z])
@@ -110,7 +132,6 @@ class GraspEvaluator:
         print("Target position: ", target_position)
         print("Final position: ", final_position)
 
-
         point = self.ik_solver.point_to_pose(final_position, cup_right_vector, cup_normal_vector)
 
         transformed_point = self.tf_listener.transformPose('base_link', point)
@@ -120,6 +141,9 @@ class GraspEvaluator:
         print(transformed_point)
         # self.ik_solver.move_xyz(transformed_point.point.x, transformed_point.point.y, transformed_point.point.z)
         self.ik_solver.move_pose(transformed_point)
+
+        # gripper_grasp
+        self.grasp()
 
         print('Goal target coordinates ', point)
         self.ik_solver.print_current_pose()
