@@ -126,7 +126,9 @@ class GraspEvaluator:
         success, _ = self.move_hand(target_position, cup_normal_vector, cup_right_vector, 0.3)
         if success:
             second_success, point = self.move_hand(target_position, cup_normal_vector, cup_right_vector, 0.2)
-            return second_success, point
+            print('Goal target coordinates ', point)
+            return second_success
+        return success
 
     def move_hand(self, target_position, cup_normal_vector, cup_right_vector, coefficient):
         final_position = self.calculate_indent_position(target_position, cup_normal_vector, coefficient)
@@ -154,12 +156,11 @@ class GraspEvaluator:
         cup_normal_vector = np.cross(left_point - center_point, right_point - center_point)
         cup_right_vector = right_point - left_point
 
-        success_move, point = self.grasp_pipeline(target_position, cup_normal_vector, cup_right_vector)
+        success_move = self.grasp_pipeline(target_position, cup_normal_vector, cup_right_vector)
 
         if success_move:
             self.grasp()
 
-        print('Goal target coordinates ', point)
         self.ik_solver.print_current_pose()
 
     def listener(self):
