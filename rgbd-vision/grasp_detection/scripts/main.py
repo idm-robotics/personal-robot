@@ -112,8 +112,8 @@ def callback(rgb_image, depth_image, camera_info, object_detection_boxes: Detect
     except CvBridgeError as e:
         print(e)
 
-    # cv2.imshow('image', image)
-    # cv2.waitKey(2)
+    cv2.imshow('image', image)
+    cv2.waitKey(2)
 
 
 def listener():
