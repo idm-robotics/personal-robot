@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 PIP_DEFAULT_TIMEOUT=1000
 
-PYTHON_VERSION=3.6 # Feel free to change it to 3.7 or upper
+PYTHON_VERSION=3.7 # You need to install python3.7-dev
 
 DIR="$( cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )"
 PROJECT_DIR=$(dirname ${DIR})
@@ -13,10 +15,12 @@ echo "Project directory: " ${PROJECT_DIR}
     && wget https://pjreddie.com/media/files/yolov3.weights -O ${DIR}/data/yolo3/yolov3.weights
 
 
-sudo apt-get install python3-venv python-catkin-pkg \
-                     python-catkin-tools python3-dev python3-catkin-pkg-modules \
-                     python3-numpy python3-yaml \
-                     ros-${ROS_DISTRO}-cv-bridge
+sudo apt-get -y install python3-venv python3.7-venv python-catkin-pkg \
+                        python-catkin-tools python3-dev python3-catkin-pkg-modules \
+                        python3-numpy python3-yaml \
+                        ros-${ROS_DISTRO}-cv-bridge
+
+python${PYTHON_VERSION} -m pip install virtualenv
 
 echo "Creating venv..."
 cd ${PROJECT_DIR}
@@ -35,7 +39,7 @@ echo "...Done"
 echo "Downloading and installing cv_bridge..."
 
 rm -rf $HOME/tmp_catkin_ws
-mkdir $HOME/tmp_catkin_ws && cd $HOME/tmp_catkin_ws
+mkdir -p $HOME/tmp_catkin_ws/src && cd $HOME/tmp_catkin_ws
 catkin init
 catkin config -DPYTHON_EXECUTABLE=${PROJECT_DIR}/venv/bin/python \
               -DPYTHON_INCLUDE_DIR=/usr/include/python${PYTHON_VERSION}m \
